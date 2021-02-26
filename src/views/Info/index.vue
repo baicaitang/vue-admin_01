@@ -100,7 +100,7 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="50"> </el-table-column>
-      <el-table-column prop="title" label="标题" width="450"> </el-table-column>
+      <el-table-column prop="title" label="标题" width="350"> </el-table-column>
       <el-table-column
         prop="categoryId"
         label="类别"
@@ -133,6 +133,7 @@
           >
             编辑
           </el-button>
+          <el-button type="success" size="mini" @click=""> 编辑详情 </el-button>
         </template>
       </el-table-column>
     </el-table>
