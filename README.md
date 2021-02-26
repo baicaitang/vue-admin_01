@@ -1,3 +1,6 @@
+<<<<<<< HEAD
+# vue-admin_01
+=======
 # vue-admin
 
 ## Project setup
@@ -22,3 +25,4 @@ yarn lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+>>>>>>> feature-account-v0.1

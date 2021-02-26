@@ -1,0 +1,41 @@
+$color:#344a5f;
+$mainColor:#f56c6c;
+
+
+// 后台框架尺寸
+$navMenu:250px;
+$navMenuMin:64px;
+$header:75px;
+
+.pull-left{
+    float:left;
+}
+
+.pull-right{
+    float: right;
+}
+
+.p-top-3{
+    padding-top: 3px;
+}
+
+@mixin webkit($type,$value){
+    -webkit-#{$type}:$value;
+    -moz-#{$type}:$value;
+    -o-#{$type}:$value;
+    -ms-#{$type}:$value;
+    #{$type}:$value;
+}
+
+@mixin selDom($align,$width,$line-height:"normal"){
+    label {
+        float:left;
+        text-align: $align;
+        line-height: $line-height+px;
+        width: $width+px;
+    }
+
+    .wrap-content {
+        margin-left: $width + px;
+    }
+}
