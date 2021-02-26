@@ -7,10 +7,10 @@ const whiteRouter = ["/login"];
 
 // 路由守卫: 登录后才能进入其他界面的一个权限
 router.beforeEach((to, from, next) => {
-    console.log(to);
+    // console.log(to);
 
     if (getToken()) {
-        console.log("存在token");
+        // console.log("存在token");
 
         if (to.path === "/login") {
             // 删除token

@@ -111,7 +111,7 @@ export default defineComponent({
   // setup(props, context) {
   setup(props, context) {
     // 引入的useRoute,useRouter 相当于vue2的 this.$route()，this.$router()
-    const route = useRoute();
+    // const route = useRoute();
     const router = useRouter();
     // vuex
     const store = useStore();
@@ -221,11 +221,6 @@ export default defineComponent({
      *表单dom
      */
     let refruleForms = ref(null);
-    onMounted(() => {
-      // console.log(route);
-      // console.log(router);
-      // console.dir(refruleForms);
-    });
 
     /**
      * 表单提交
@@ -235,7 +230,6 @@ export default defineComponent({
       datas.getCodeText = "获取验证码";
       // console.log(datas.model);
 
-      // console.log(context);
       refruleForms.value.validate((valid) => {
         if (valid) {
           if (datas.model === "register") {
@@ -262,7 +256,7 @@ export default defineComponent({
 
       store
         //命名空间
-        .dispatch("app/login", data)
+        .dispatch("login/login", data)
         .then((res) => {
           ElMessage({
             showClose: true,

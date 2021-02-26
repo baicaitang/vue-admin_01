@@ -8,6 +8,7 @@ import "./router/Route_guard";
 // axios
 import axios from "axios";
 import VueAxios from "vue-axios";
+
 // element-plus
 import ElementPlus from "element-plus";
 import "element-plus/lib/theme-chalk/index.css";
@@ -18,7 +19,8 @@ import "./utils/svg";
 
 
 
-createApp(App)
+
+const app = createApp(App)
   .component("SvgIcon", svg_icon) //全局组件
   .use(store)
   .use(router)

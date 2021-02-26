@@ -1,8 +1,8 @@
 <template>
-  <div class="ConsoleIndex">首页</div>
+  <div class="ConsoleIndex">home</div>
 </template>
 <script>
-import { onMounted } from "vue";
+import { reactive, toRefs, ref } from "vue";
 
 export default {
   name: "ConsoleIndex",
@@ -12,6 +12,4 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.ConsoleIndex {
-}
 </style>

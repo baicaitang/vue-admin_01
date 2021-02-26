@@ -33,7 +33,7 @@ export default {
 <style lang="scss" scoped>
 .layout {
   width: 100vw;
-  height: 100vh;
+  // height: 1260px;
   background-color: #f7f7f7;
 }
 </style>
