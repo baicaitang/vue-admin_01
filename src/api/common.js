@@ -1,6 +1,7 @@
 import {
     GetCategory,
-    GetCategoryAll
+    GetCategoryAll,
+
 } from "@/api/news.js";
 import { reactive } from "vue";
 
@@ -14,8 +15,8 @@ export function common() {
     const getInfoCategory = (params) => {
         GetCategory({}).then(res => {
             let data = res.data.data.data;
-            console.log(data);
-            sessionStorage.setItem('category_name', JSON.stringify(data))
+            // console.log(data);
+            // sessionStorage.setItem('category_name', JSON.stringify(data))
             infoCategory.item = data
 
         }).catch(err => { })
@@ -24,7 +25,7 @@ export function common() {
     const getCategoryAll = (params) => {
         GetCategoryAll({}).then(res => {
             let data = res.data.data;
-            console.log(data);
+            // console.log(data);
             allCategory.item = data
 
         }).catch(err => { })
@@ -37,3 +38,4 @@ export function common() {
         getCategoryAll
     }
 }
+

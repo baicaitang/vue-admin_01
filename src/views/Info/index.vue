@@ -39,7 +39,6 @@
                 v-model="date_val"
                 type="datetimerange"
                 format="YYYY-MM-DD HH:mm:ss"
-                align="right"
                 start-placeholder="开始日期"
                 end-placeholder="结束日期"
                 :default-time="defaultTime"
@@ -115,8 +114,8 @@
         :formatter="toDate"
       >
       </el-table-column>
-      <el-table-column prop="user" label="管理员" width="115">
-      </el-table-column>
+      <!-- <el-table-column prop="user" label="管理员" width="115"> -->
+      <!-- </el-table-column> -->
       <el-table-column label="操作">
         <template #default="scope">
           <el-button
@@ -133,7 +132,13 @@
           >
             编辑
           </el-button>
-          <el-button type="success" size="mini" @click=""> 编辑详情 </el-button>
+          <el-button
+            type="success"
+            size="mini"
+            @click="toInfoDetail(scope.row)"
+          >
+            编辑详情
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -181,6 +186,7 @@
 import { reactive, toRefs, ref, onMounted, watch } from "vue";
 import InfoDialog from "./dialog/info";
 import EditDialog from "./dialog/edit";
+import { useRouter } from "vue-router";
 // 全局方法
 import { global } from "@/utils/global.js";
 // 全局api
@@ -205,6 +211,7 @@ export default {
 
     // vuex
     const store = useStore();
+    const router = useRouter();
 
     // 选项数据
     const data1 = reactive({
@@ -265,11 +272,13 @@ export default {
       //     options.category = res.data.data.data;
       //   })
       //   .catch((err) => {});
+      options.category = infoCategory.item;
     });
     /**
      * 监听
      */
     watch(
+      // () => allCategory.item,
       () => infoCategory.item,
       (value) => {
         options.category = value;
@@ -295,8 +304,8 @@ export default {
           let data = res.data.data;
 
           tableData.item = data.data;
-
-          total.value = data.total;
+          // console.log(data.total);
+          total.value = data.total || 0;
           loadingData.value = false;
         })
         .catch((err) => {
@@ -312,23 +321,29 @@ export default {
     };
 
     const toCategory = (row) => {
+      // console.log(row);
       let cateId = row.categoryId;
-      // let name = options.category.filter((item) => {
-      //   return item.id == cateId;
-      // });
 
-      // console.log(JSON.parse(sessionStorage.getItem("category_name")));
-      let category_name = JSON.parse(sessionStorage.getItem("category_name"));
-
-      /**
-       * bug:如果分类删除后显示什么
-       */
-      let arr = category_name.filter((item) => {
+      let name = options.category.filter((item) => {
         return item.id == cateId;
       });
-      // console.log(arr);
+      if (name == []) {
+        return row.categoryId;
+      } else {
+        return name[0].category_name;
+      }
 
-      return arr[0].category_name;
+      // // console.log(JSON.parse(sessionStorage.getItem("category_name")));
+      // let category_name = JSON.parse(sessionStorage.getItem("category_name"));
+      // /**
+      //  * bug:如果分类删除后显示什么
+      //  */
+      // let arr = category_name.filter((item) => {
+      //   return item.id == cateId;
+      // });
+      // console.log(arr);
+      // return arr[0].category_name;
+      // console.log(name);
     };
 
     // 删除
@@ -393,7 +408,7 @@ export default {
     // };
     const formatData = () => {
       let requestData = {
-        pageNumber: page.pageNumber,
+        pageNumber: page.pageNumber || 1,
         pageSize: page.pageSize,
       };
       // 分类Id
@@ -460,6 +475,33 @@ export default {
       dialog_info_edit.value = true;
     };
 
+    const toInfoDetail = (row) => {
+      let params = {
+        id: row.id,
+        title: row.title,
+      };
+      // console.log(row);
+      // store.commit("infoDetail/SET_ID", row.id);
+      // store.commit("infoDetail/SET_TITLE", row.title);
+      store.commit("infoDetail/UPDATE_STATE_VALUE", {
+        id: {
+          value: row.id,
+          sessionKey: "infoId",
+          session: true,
+        },
+        title: {
+          value: row.title,
+          sessionkey: "infoTitle",
+          session: true,
+        },
+      });
+
+      router.push({
+        name: "InfoDetail",
+        params: params,
+      });
+    };
+
     const refresh = () => {
       let req = {
         categoryId: "",
@@ -505,6 +547,7 @@ export default {
       editInfo_dialog,
       getList,
       refresh,
+      toInfoDetail,
     };
   },
 };

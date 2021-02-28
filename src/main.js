@@ -18,12 +18,14 @@ import svg_icon from "./component/svg_icon/index.vue";
 import "./utils/svg";
 
 
-
-
 const app = createApp(App)
+
+
+app
   .component("SvgIcon", svg_icon) //全局组件
   .use(store)
   .use(router)
   .use(ElementPlus)
   .use(VueAxios, axios)
   .mount("#app");
+
