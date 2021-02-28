@@ -110,3 +110,14 @@ export function EditCategory(data) {
         data
     });
 }
+
+/**
+ * 获取七牛云token
+ */
+export function getQiniuToken(data) {
+    return service.request({
+        url: "/uploadImgToken/",
+        method: "post",
+        data
+    });
+}

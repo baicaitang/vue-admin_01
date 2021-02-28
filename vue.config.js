@@ -80,7 +80,7 @@ module.exports = {
         pathRewrite: {
           [`^${process.env.VUE_APP_FLAG}`]: "" //  查找开头为/process.env.VUE_APP_FLAG 的字符串地址  替换成空字符串"" 只剩下后面的字符串会拼接到target
         }
-      }
+      },
       // 本地开发环境请求地址：http://www.web-jshtml.cn/api/cars/getCode/
 
       // 前端的接口：http://www.web-jshtml/api/cars/web
@@ -91,6 +91,8 @@ module.exports = {
       //     [`^${process.env.VUE_APP_API_WEB}`]: ''
       // }
       // }
+      // https://jsonplaceholder.typicode.com/posts/
+
     }
   },
   /**

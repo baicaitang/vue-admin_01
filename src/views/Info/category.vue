@@ -14,7 +14,12 @@
               :key="firstItem.id"
             >
               <h4>
-                <SvgIcon iconName="jiahao" iconClass="cate-icon" class="plus" />
+                <SvgIcon
+                  iconName="jiahao"
+                  iconClass="cate-icon"
+                  class="plus"
+                  @click="closeCate"
+                />
                 <span class="cate_name">{{ firstItem.category_name }}</span>
                 <div class="btn-group">
                   <el-button
@@ -42,7 +47,7 @@
                   <el-button
                     size="mini"
                     round
-                    @click="deleteConfirm(firstItem.id)"
+                    @click="deleteConfirm(firstItem)"
                   >
                     删除</el-button
                   >
@@ -61,6 +66,7 @@
                       round
                       @click="
                         editChildrenCategory({
+                          parent: firstItem,
                           data: childrenItem,
                           type: 'cate_children_edit',
                         })
@@ -71,7 +77,7 @@
                     <el-button
                       size="mini"
                       round
-                      @click="deleteConfirm(childrenItem.id)"
+                      @click="deleteConfirm(childrenItem)"
                     >
                       删除</el-button
                     >
@@ -160,8 +166,6 @@ export default {
       labelPosition: "right",
       cate_first: true,
       cate_children: true,
-      // categoryName: "",
-      // secCategoryName: "",
     });
 
     const category = reactive({
@@ -191,6 +195,9 @@ export default {
       } else if (button_type.value === "cate_children_add") {
         // 添加二级分类
         addChildrenCate();
+      } else if (button_type.value === "cate_children_edit") {
+        // 编辑二级分类
+        editChildrenCate();
       }
     };
 
@@ -247,8 +254,9 @@ export default {
     //     .catch((err) => {});
     // };
 
-    const deleteConfirm = (id) => {
-      deleteId.value = id;
+    const deleteConfirm = (data) => {
+      console.log(data);
+      deleteId.value = data.id;
 
       messageBox({
         content: "确认删除，确认后将无法恢复！",
@@ -266,11 +274,13 @@ export default {
           // console.log(res);
 
           let data = res.data;
+
           ElMessage({
             message: data.message,
             type: "success",
           });
-          // getCategoryAll();
+
+          getCategoryAll();
           /**
            * 方法1
            */
@@ -282,12 +292,12 @@ export default {
           /**
            * 方法2
            */
-          console.log(deleteId.value);
-          const arr = category.item.filter((item) => {
-            return item.id !== deleteId.value;
-          });
-          console.log(arr);
-          category.item = arr;
+          // console.log(deleteId.value);
+          // const arr = category.item.filter((item) => {
+          //   return item.id !== deleteId.value;
+          // });
+          // console.log(arr);
+          // category.item = arr;
         })
         .catch((err) => {});
     };
@@ -313,14 +323,17 @@ export default {
         submit_loading.value = false;
         return false;
       }
-      let requestData = {
+      let req = {
         id: category.current.id,
         categoryName: categoryName.value,
       };
 
-      EditCategory(requestData)
+      editCate(req);
+    };
+
+    const editCate = (req) => {
+      EditCategory(req)
         .then((res) => {
-          // console.log(res);
           let resData = res.data;
           if (resData.resCode === 0) {
             ElMessage({
@@ -328,15 +341,20 @@ export default {
               type: "success",
             });
           }
-
+          // console.log(resData);
           submit_loading.value = false;
-          let arr = category.item.filter(
-            (item) => item.id == category.current.id
-          );
+          categoryName.value = "";
+
+          let arr = category.item.filter((item) => {
+            // 一级分类
+            // console.log(item);
+
+            return item.id == category.current.id;
+          });
           // console.log(arr);
+
           arr[0].category_name = resData.data.data.categoryName;
 
-          categoryName.value = "";
           category.current = [];
         })
         .catch((err) => {
@@ -348,6 +366,7 @@ export default {
       // console.log(params);
       data.cate_first = true;
       data.cate_children = true;
+      cate_first_disabled.value = true;
       cate_children_disabled.value = false;
       submit_disabled.value = false;
       button_type.value = params.type;
@@ -388,7 +407,61 @@ export default {
         });
     };
 
-    const editChildrenCategory = () => {};
+    const editChildrenCategory = (params) => {
+      // console.log(params);
+      data.cate_first = true;
+      data.cate_children = true;
+      cate_first_disabled.value = true;
+      cate_children_disabled.value = false;
+      submit_disabled.value = false;
+      button_type.value = params.type;
+      category.current = params.data;
+      categoryName.value = params.parent.category_name;
+      secCategoryName.value = params.data.category_name;
+    };
+
+    const editChildrenCate = () => {
+      if (category.current.length == 0) {
+        ElMessage({
+          message: "未选择分类！",
+          type: "error",
+        });
+        submit_loading.value = false;
+        return false;
+      }
+
+      let req = {
+        id: category.current.id,
+        categoryName: secCategoryName.value,
+      };
+
+      editChildren(req);
+    };
+
+    const editChildren = (req) => {
+      EditCategory(req)
+        .then((res) => {
+          let resData = res.data;
+          if (resData.resCode === 0) {
+            ElMessage({
+              message: resData.message,
+              type: "success",
+            });
+          }
+          console.log(resData);
+          submit_loading.value = false;
+
+          getCategoryAll();
+          categoryName.value = "";
+          secCategoryName.value = "";
+          category.current = [];
+        })
+        .catch((err) => {
+          submit_loading.value = false;
+        });
+    };
+
+    const closeCate = () => {};
 
     /**
      * 页面dom元素实例完成
@@ -406,6 +479,7 @@ export default {
       //   })
       //   .catch((err) => {});
     });
+
     /**
      * 监听
      */
@@ -438,6 +512,7 @@ export default {
       handleAddChildren,
       editChildrenCategory,
       deleteCategory,
+      closeCate,
     };
   },
 };
@@ -486,7 +561,7 @@ export default {
     }
 
     &:hover {
-      @include webkit(transition, all 0.5s ease 0);
+      @include webkit(transition, all 0.5s ease);
       background-color: #f3f3f3;
 
       .btn-group {
