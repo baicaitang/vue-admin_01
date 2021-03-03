@@ -93,19 +93,14 @@
       border
       fit
       style="width: 100%"
-      class="space-bottom"
+      class="space-bottom infoIndex-table-th"
       ref="deleteDom"
       v-loading="loadingData"
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="50"> </el-table-column>
-      <el-table-column prop="title" label="标题" width="350"> </el-table-column>
-      <el-table-column
-        prop="categoryId"
-        label="类别"
-        width="130"
-        :formatter="toCategory"
-      >
+      <el-table-column prop="title" label="标题" width="300"> </el-table-column>
+      <el-table-column prop="categoryName" label="类别" width="130">
       </el-table-column>
       <el-table-column
         prop="createDate"
@@ -114,9 +109,9 @@
         :formatter="toDate"
       >
       </el-table-column>
-      <!-- <el-table-column prop="user" label="管理员" width="115"> -->
-      <!-- </el-table-column> -->
-      <el-table-column label="操作">
+      <el-table-column prop="user" label="管理员" width="115">
+      </el-table-column>
+      <el-table-column label="操作" width="352">
         <template #default="scope">
           <el-button
             type="danger"
@@ -183,7 +178,7 @@
   </div>
 </template>
 <script>
-import { reactive, toRefs, ref, onMounted, watch } from "vue";
+import { reactive, toRefs, ref, onMounted, watch, onBeforeMount } from "vue";
 import InfoDialog from "./dialog/info";
 import EditDialog from "./dialog/edit";
 import { useRouter } from "vue-router";
@@ -235,7 +230,23 @@ export default {
       ],
     });
     // 表格数据
-    const tableData = reactive({ item: [] });
+    const tableData = reactive({
+      item: [
+        // 示例数据
+        {
+          categoryId: "9988",
+          categoryName: "体育",
+          content:
+            "哈哈哈哈哈哈哈哈哈哈或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或",
+          createDate: "1614450500",
+          user: "admin",
+          id: "3280",
+          imgUrl: "",
+          status: null,
+          title: "示例数据",
+        },
+      ],
+    });
     const page = reactive({
       pageNumber: 1,
       pageSize: 10,
@@ -245,7 +256,7 @@ export default {
     const currentPage = ref(1);
     const dialog_info = ref(false);
     const dialog_info_edit = ref(false);
-    const total = ref(0);
+    const total = ref(1); //默认数据1
     const loadingData = ref(false);
     const delId = ref("");
     const editId = ref("");
@@ -254,26 +265,32 @@ export default {
     let deleteDom = ref("");
     let deleteAllDom = ref("");
 
-    /**
-     * 页面dom元素实例完成
-     */
-    onMounted(() => {
-      // 获取列表
+    onBeforeMount(() => {
       getList();
+    }),
+      /**
+       * 页面dom元素实例完成
+       */
+      onMounted(() => {
+        if (tableData.item.length) {
+          total.value = tableData.item.length;
+        }
+        // 获取列表
+        getList();
 
-      // 获取分类：
-      /**方法二：全局api */
-      getInfoCategory();
-      // getCategoryAll();
-      /**方法三：vuex */
-      // store
-      //   .dispatch("common/getInfoCategory")
-      //   .then((res) => {
-      //     options.category = res.data.data.data;
-      //   })
-      //   .catch((err) => {});
-      options.category = infoCategory.item;
-    });
+        // 获取分类：
+        /**方法二：全局api */
+        getInfoCategory();
+        // getCategoryAll();
+        /**方法三：vuex */
+        // store
+        //   .dispatch("common/getInfoCategory")
+        //   .then((res) => {
+        //     options.category = res.data.data.data;
+        //   })
+        //   .catch((err) => {});
+        options.category = infoCategory.item;
+      });
     /**
      * 监听
      */
@@ -283,6 +300,7 @@ export default {
       (value) => {
         options.category = value;
         // console.log(options.category);
+        toCategory(options.category);
       }
     );
 
@@ -304,6 +322,7 @@ export default {
           let data = res.data.data;
 
           tableData.item = data.data;
+          toCategory(options.category);
           // console.log(data.total);
           total.value = data.total || 0;
           loadingData.value = false;
@@ -320,30 +339,24 @@ export default {
       return date;
     };
 
-    const toCategory = (row) => {
-      // console.log(row);
-      let cateId = row.categoryId;
+    const toCategory = (cate) => {
+      // console.log(cate);
+      // console.log(tableData.item);
 
-      let name = options.category.filter((item) => {
-        return item.id == cateId;
-      });
-      if (name == []) {
-        return row.categoryId;
-      } else {
-        return name[0].category_name;
+      let id = cate.filter((j) => j);
+
+      for (let i = 0; i < tableData.item.length; i++) {
+        let item = tableData.item[i];
+
+        id.forEach((j) => {
+          if (j.id == item.categoryId) {
+            item.categoryName = j.category_name;
+            return true;
+          }
+        });
       }
 
-      // // console.log(JSON.parse(sessionStorage.getItem("category_name")));
-      // let category_name = JSON.parse(sessionStorage.getItem("category_name"));
-      // /**
-      //  * bug:如果分类删除后显示什么
-      //  */
-      // let arr = category_name.filter((item) => {
-      //   return item.id == cateId;
-      // });
-      // console.log(arr);
-      // return arr[0].category_name;
-      // console.log(name);
+      // console.log(tableData.item);
     };
 
     // 删除
@@ -579,6 +592,7 @@ export default {
   &.date {
     @include selDom(left, 60, 40);
   }
+
   &.key-word {
     @include selDom(left, 70, 40);
   }

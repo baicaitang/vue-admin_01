@@ -19,14 +19,14 @@
         ref="refruleForms"
         class="login-form"
       >
-        <el-form-item label="邮箱" prop="username">
+        <el-form-item label="邮箱" prop="username" class="login-label">
           <el-input
             type="text"
             v-model="ruleForm.username"
             autocomplete="off"
           ></el-input>
         </el-form-item>
-        <el-form-item label="密码" prop="pass">
+        <el-form-item label="密码" prop="pass" class="login-label">
           <el-input
             type="password"
             v-model="ruleForm.pass"
@@ -39,6 +39,7 @@
           label="确认密码"
           prop="comfirmPass"
           v-show="model == 'register'"
+          class="login-label"
         >
           <el-input
             type="password"
@@ -48,7 +49,7 @@
             autocomplete="off"
           ></el-input>
         </el-form-item>
-        <el-form-item label="验证码" prop="code" class="getcode">
+        <el-form-item label="验证码" prop="code" class="getcode login-label">
           <el-row :gutter="10">
             <el-col :span="14">
               <el-input
@@ -78,8 +79,6 @@
           >
         </el-form-item>
       </el-form>
-      <!-- <el-button @click="testFun">test</el-button> -->
-      <!-- <el-button @click="getCode()">test</el-button> -->
     </div>
   </div>
 </template>
@@ -91,11 +90,9 @@ import {
   toRefs,
   reactive,
   ref,
-  getCurrentInstance,
-  onMounted,
-  nextTick,
+  // getCurrentInstance,
 } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { useRouter } from "vue-router";
 import {
   stripscript,
   validate_email,
@@ -108,8 +105,8 @@ import { useStore } from "vuex";
 
 export default defineComponent({
   name: "Login",
-  // setup(props, context) {
-  setup(props, context) {
+
+  setup() {
     // 引入的useRoute,useRouter 相当于vue2的 this.$route()，this.$router()
     // const route = useRoute();
     const router = useRouter();
@@ -415,10 +412,6 @@ export default defineComponent({
       }, 1000);
     };
 
-    const testFun = () => {
-      router.push({ name: "Console", params: { data: "ok" } });
-    };
-
     return {
       ...data,
       ...form,
@@ -426,7 +419,6 @@ export default defineComponent({
       submitForm,
       refruleForms,
       getCode,
-      testFun,
     };
   },
 });

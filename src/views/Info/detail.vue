@@ -88,9 +88,9 @@ export default {
       imgUrl: "",
     });
     const uploadConfig = reactive({
-      ak: "Avh-EZZAa4TxqPQZsEW42fXBUbTMFi-RKSZTRKJj",
-      sk: "l9AXtnhCVKZexXNRcmHXzmecXiCUiLynwGboMeUw",
-      buckety: "webjshtml",
+      ak: "yf0RFOmlEOMq9CluPmOCRd6AkEIrBtUnUw3krMx1",
+      sk: "CgPz3b0cnu6r_lP0D3YvzD2AgpGcD2xGyiJZn94p",
+      buckety: "hpc-space",
     });
     const uploadAction = ref("http://up-z2.qiniup.com");
 
@@ -170,7 +170,7 @@ export default {
         content: form.content,
         imgUrl: form.imgUrl,
       };
-      console.log(requestData);
+      // console.log(requestData);
       submitLoaging.value = true;
 
       EditInfo(requestData)
@@ -226,7 +226,7 @@ export default {
           type: "error",
         });
       }
-      console.log(file.name);
+      // console.log(file.name);
 
       form.imgUrl = file.name;
       // 文件名转码

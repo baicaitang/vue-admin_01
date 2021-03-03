@@ -1,7 +1,7 @@
 import { GetCategory } from "@/api/news";
 
 const state = {
-    QiniuUrl: "http://www-web-jshtml-cn-idva7mx.web-jshtml.cn/"
+    QiniuUrl: "http://adminimg.baicaitang.top/"
 }
 
 const getters = {

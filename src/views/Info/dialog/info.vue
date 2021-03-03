@@ -119,6 +119,7 @@ export default {
             type: "success",
           });
           submit_loading.value = false;
+          // 重置
           dialog_form.value.resetFields();
           resetField();
           dialog_info_flag.value = false;

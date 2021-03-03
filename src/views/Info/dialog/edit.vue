@@ -128,7 +128,7 @@ export default {
             title: data.title,
             content: data.content,
           };
-          console.log(form_data.form);
+          // console.log(form_data.form);
         })
         .catch((err) => {});
     };

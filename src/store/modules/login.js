@@ -10,7 +10,7 @@ const getters = {
 }
 const mutations = {//同步
     SET_COLLAPSE(state) {
-        console.log('login!!!!!!!');
+        // console.log('login!!!!!!!');
         state.isCollapse = !state.isCollapse
         // 本地存储 menu切换状态
         sessionStorage.setItem('isCollapse', JSON.stringify(state.isCollapse))
@@ -29,7 +29,7 @@ const actions = {//异步
         return new Promise((resolve, reject) => {
             Login(requestData).then(res => {
                 // console.log(content);
-                console.log(res);
+                // console.log(res);
 
                 let data = res.data.data
 

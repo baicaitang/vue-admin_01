@@ -1,6 +1,14 @@
 @import "./config.scss";
 
+.login-label{
+    label{
+        color: #fff;
+    }
+}
+
 .login[data-v-aeba673c]{
+    
+
     .el-form-item {
         margin-bottom: 20px;
 
@@ -11,6 +19,9 @@
         }
 
     }
+    .el-form-item__label{
+        color: #fff;
+    }
 
     .getcode {
         label.el-form-item__label {
@@ -18,7 +29,11 @@
         }
     }
 }
-
+.getcode {
+    label.el-form-item__label {
+        text-align: left;
+    }
+}
 
 //aside
 .open .aside[data-v-2dc65dda]{
@@ -78,6 +93,24 @@
 
 
 //main
+.userIndex-table-th,
+.infoIndex-table-th {
+    th {
+        text-align: center;
+    }
+    .el-table__row{
+        .cell {
+            text-align: center;
+        }
+    }
+    
+}
+
+.el-table--border td:first-child .cell,
+.el-table--border th:first-child .cell{
+    padding-left: 14px;
+}
+
 .ConsoleIndex[data-v-a7ed6d2a]{
     // el-select 
 
@@ -89,13 +122,9 @@
         }
     }
 
+
     // el-table 
     .el-table {
-
-        td,
-        th.is-leaf {
-            text-align: center;
-        }
 
         .el-table--border td:first-child .cell,
         .el-table--border th:first-child .cell {
@@ -106,9 +135,16 @@
             padding-left: 1.8px;
         }
     }
+    .el-table td,
+    .el-table th.is-leaf{
+        text-align: center;
+    }
+
+
     //dialog
     .el-dialog__body {
         padding:30px 50px 0px;
+
         .el-input.el-input--suffix {
             width: 180px;
         }
@@ -152,5 +188,11 @@
         width: 178px;
         height: 178px;
         display: block;
+    }
+}
+
+.userIndex[data-v-bc0b5f70]{
+    .el-dialog__body{
+        padding-bottom: 0;
     }
 }

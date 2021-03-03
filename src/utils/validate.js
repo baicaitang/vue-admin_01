@@ -16,7 +16,7 @@ export function stripscript(str) {
 }
 
 /**
- * 邮箱验证
+ * 用户邮箱验证
  */
 export function validate_email(value) {
   let regEmail = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;

@@ -255,7 +255,7 @@ export default {
     // };
 
     const deleteConfirm = (data) => {
-      console.log(data);
+      // console.log(data);
       deleteId.value = data.id;
 
       messageBox({
@@ -448,7 +448,7 @@ export default {
               type: "success",
             });
           }
-          console.log(resData);
+          // console.log(resData);
           submit_loading.value = false;
 
           getCategoryAll();

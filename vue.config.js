@@ -37,7 +37,7 @@ module.exports = {
       extensions: [".js", ".json", ".vue"], // 自动添加文件名后缀
       alias: {
         "@": path.resolve(__dirname, "./src"),
-        "@c": path.resolve(__dirname, "./src/components")
+        "@c": path.resolve(__dirname, "./src/component")
       }
     };
   },
