@@ -5,14 +5,10 @@
         <div class="sel-wrap wordKey">
           <label>关键字：</label>
           <div class="wrap-content">
-            <el-select v-model="wordKey" placeholder="请选择">
-              <el-option
-                v-for="item in options"
-                :key="item.value"
-                :value="item.value"
-                :label="item.label"
-              ></el-option>
-            </el-select>
+            <SelectOption
+              v-model:selectData.sync="selectData"
+              :flag="selectflag"
+            ></SelectOption>
           </div>
         </div>
       </el-col>
@@ -25,16 +21,31 @@
         </div>
       </el-col>
       <el-col :span="2">
-        <el-button type="danger" @click="search">搜索</el-button>
+        <el-button
+          type="danger"
+          @click="search"
+          :disabled="!$btnPerm('user:search')"
+          >搜索</el-button
+        >
       </el-col>
       <el-col :span="13">
-        <el-button type="danger" class="pull-right" @click="addUser"
+        <el-button
+          type="danger"
+          class="pull-right"
+          @click="addUser"
+          :disabled="!$btnPerm('user:add')"
           >添加用户</el-button
         >
       </el-col>
     </el-row>
     <!-- 表单组件 -->
-    <Table :config="ConfigTable" v-model="tableRow" ref="userTable">
+    <Table
+      :config="ConfigTable"
+      v-model="tableRow"
+      ref="userTable"
+      :selectReqData="selectReqData"
+      :refreshFlag="refreshFlag"
+    >
       <template v-slot:status="slotData">
         <!-- 禁用/启用插槽 -->
         <!-- {{ slotData.data.status }} -->
@@ -50,19 +61,30 @@
       </template>
       <template v-slot:operation="slotData">
         <!-- 删除编辑插槽 -->
-        <el-button type="success" size="mini" @click="handleEdit(slotData.data)"
+
+        <el-button
+          type="success"
+          size="mini"
+          @click="handleEdit(slotData.data)"
+          :disabled="!$btnPerm('user:edit')"
           >编辑</el-button
         >
+
         <el-button
           size="mini"
           type="danger"
           @click="handleDelete(slotData.data)"
+          :disabled="!$btnPerm('user:del')"
           >删除</el-button
         >
       </template>
       <template v-slot:tableFooterData>
         <!-- 批量删除插槽 -->
-        <el-button size="medium" @click="deleteAll" ref="deleteAllDom"
+        <el-button
+          size="medium"
+          @click="deleteAll"
+          ref="deleteAllDom"
+          :disabled="!$btnPerm('user:batchDel')"
           >批量删除</el-button
         >
       </template>
@@ -73,7 +95,7 @@
       v-model:switchStatus.sync="switchStatus"
       v-model:editId.sync="editId"
       :editUserDatas="editUserData"
-      @refreshList="refresh()"
+      v-model:refreshList.sync="refreshFlag"
     ></Add>
   </div>
 </template>
@@ -85,24 +107,18 @@ import { ElMessage } from "element-plus";
 // 全局方法
 import { global } from "@/utils/global.js";
 import Table from "@c/table/index.vue";
+import SelectOption from "@c/selectOption/index";
+import { TableLoadingData } from "@c/table/tableLoadingData";
 export default {
   name: "UserIndex",
-  components: { Table, Add },
+  components: { Table, Add, SelectOption },
   setup() {
     // 全局方法
     const { messageBox } = global();
+    const { tableLoadData } = TableLoadingData();
 
     const user_data = reactive({
       wordKey: "邮箱/用户名",
-      search_keyword: "", //搜素关键字
-      options: [
-        { value: 1, label: "真实姓名" },
-        { value: 2, label: "邮箱/用户名" },
-        { value: 3, label: "手机号" },
-        { value: 4, label: "地区" },
-        { value: 5, label: "角色" },
-        { value: 6, label: "禁用/启用" },
-      ], //选项数据
       tableData: [], //列表数据
       dialog_add: false, //弹框状态
     });
@@ -132,7 +148,7 @@ export default {
         {
           label: "角色",
           filed: "role",
-          width: "130",
+          width: "147",
         },
         {
           label: "禁用/启用",
@@ -143,7 +159,7 @@ export default {
         },
         {
           label: "操作",
-          width: "186",
+          width: "165",
           columnType: "slot",
           slotname: "operation",
         },
@@ -157,6 +173,10 @@ export default {
         data: { pageNumber: 1, pageSize: 10 },
       },
     };
+    const selectData = ref({}); //下拉选中数据
+    const selectReqData = ref({}); //搜索请求数据
+    const selectflag = ref(false); //清除选项数据
+    const search_keyword = ref(""); //搜素关键字
     const tableRow = ref({}); //批量删除、删除数据id
     const delId = ref([]); //删除选项id
     const updateUserActiveStatus = ref(false); //阻止多次修改状态
@@ -164,6 +184,7 @@ export default {
     const type = ref(""); //弹框类型
     const switchStatus = ref(""); //禁用启用按钮数据
     const editId = ref(""); //编辑数据id
+    const refreshFlag = ref(false);
 
     // 用户列表dom
     const userTable = ref(null);
@@ -192,9 +213,28 @@ export default {
         handleSwitch();
       }
     );
+    watch(
+      () => refreshFlag.value,
+      (newVal) => {
+        // console.log(newVal);
+        // refreshFlag.value = newVal;
+      }
+    );
 
     // 搜索
-    const search = () => {};
+    const search = () => {
+      // console.log(search_keyword.value);
+      // console.log(selectData.value);
+      let key = selectData.value.value;
+      let requestData = {
+        [key]: search_keyword.value,
+      };
+      // console.log(requestData);
+      // ConfigTable.requestData[key] = search_keyword.value;
+      selectReqData.value = requestData;
+      selectflag.value = true;
+      search_keyword.value = "";
+    };
 
     // 添加用户
     const addUser = () => {
@@ -248,8 +288,10 @@ export default {
             message: res.data.message,
             type: "success",
           });
-          refresh();
+
           delId.value = [];
+          refreshFlag.value = true;
+          // refresh();
         })
         .catch((err) => {});
     };
@@ -274,7 +316,7 @@ export default {
       let req;
 
       // 点击禁用启用按钮
-      if (val.status) {
+      if (val && val.status) {
         console.log(val);
         req = {
           id: val.id,
@@ -288,9 +330,11 @@ export default {
           id: editId.value,
           status: switchStatus.value,
         };
+        // 清除id数据
+        editId.value = "";
       }
 
-      console.log(req);
+      // console.log(req);
 
       userActive(req)
         .then((res) => {
@@ -299,18 +343,18 @@ export default {
           //   message: res.data.message,
           //   type: "success",
           // });
-          updateUserActiveStatus.value = false;
           refresh();
+          updateUserActiveStatus.value = false;
         })
         .catch((err) => {
           updateUserActiveStatus.value = false;
         });
     };
 
-    // 刷新
+    // 无参数刷新
     const refresh = () => {
-      // console.log(userTable.value);
-      userTable.value.refresh();
+      // console.log(ConfigTable.requestData);
+      tableLoadData(ConfigTable.requestData);
     };
 
     return {
@@ -322,13 +366,17 @@ export default {
       type,
       switchStatus,
       editId,
+      selectData,
+      search_keyword,
+      selectReqData,
+      selectflag,
       // methods
       search,
       addUser,
       handleEdit,
       handleDelete,
       deleteAll,
-      refresh,
+      refreshFlag,
       handleSwitch,
     };
   },
@@ -336,7 +384,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .userIndex {
-  padding: 20px;
+  padding: 30px;
 }
 .sel-wrap {
   label {

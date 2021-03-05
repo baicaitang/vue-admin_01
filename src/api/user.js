@@ -68,17 +68,6 @@ export function userActive(data) {
     });
 }
 
-/**
- * 用户角色
- */
-export function userRole(data) {
-    return service.request({
-        url: "/userRole/",
-        method: "post",
-        data
-    });
-}
-
 
 /**
  * 获取省、市、区
@@ -102,5 +91,4 @@ export function getRole(data) {
         data
     });
 }
-
 

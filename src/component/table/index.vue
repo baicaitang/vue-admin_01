@@ -38,7 +38,11 @@
       <el-col :span="12">
         <!-- 批量删除 -->
         <slot name="tableFooterData"></slot>
-        <el-button size="medium" type="success" @click="refresh()"
+        <el-button
+          size="medium"
+          type="success"
+          @click="refresh()"
+          :loading="btnLoading"
           >刷新</el-button
         >
       </el-col>
@@ -62,10 +66,8 @@
 <script>
 import { reactive, toRefs, ref, onMounted, watch, onBeforeMount } from "vue";
 // import { ElMessage } from "element-plus";
-import { useStore } from "vuex";
-import { useRouter } from "vue-router";
-// 全局方法
-import { global } from "@/utils/global.js";
+// import { useStore } from "vuex";
+// import { useRouter } from "vue-router";
 import { TableLoadingData } from "./tableLoadingData";
 import { RecordPage } from "./recordPage";
 import { PaginationHook } from "./paginationHook";
@@ -77,9 +79,17 @@ export default {
       type: Object,
       default: () => {},
     },
-
+    selectReqData: {
+      type: Object,
+      default: () => {},
+    },
     modelValue: Object,
+    refreshFlag: {
+      type: Boolean,
+      default: false,
+    },
   },
+
   //   data() {
   //     return {
   //       table_Config: {
@@ -95,11 +105,9 @@ export default {
   //混入
   //   mixins: [tableLoadDataMixin],
   setup(props, { emit }) {
-    // 全局方法
-    const { messageBox } = global();
     // vuex
-    const store = useStore();
-    const router = useRouter();
+    // const store = useStore();
+    // const router = useRouter();
     // 数据加载
     const tableRoot = ref(null);
     const {
@@ -107,7 +115,8 @@ export default {
       //   totals,
       tableDatas,
       tableLoadData,
-    } = TableLoadingData(tableRoot);
+    } = TableLoadingData();
+    // console.log(tableDatas);
 
     const datas = toRefs(tableDatas);
 
@@ -132,9 +141,9 @@ export default {
       tableData: [
         {
           //示例数据
-          id: "343",
+          id: "",
           btnPerm: "",
-          username: "小白",
+          username: "xiaobai@qq.com",
           truename: "李白",
           phone: "121425352",
           region: "广东",
@@ -143,14 +152,15 @@ export default {
         },
       ],
     });
-    const page = reactive({
-      pageNumber: 1,
-      pageSize: 10,
-    });
+    // const page = reactive({
+    //   pageNumber: 1,
+    //   pageSize: 10,
+    // });
     const currentPage = ref(1);
     const total = ref(0);
     const pageSize = ref(10);
     const pageSizes = ref([10, 20, 30, 40]);
+    const btnLoading = ref(false);
 
     const table_datas = toRefs(table_data);
 
@@ -167,10 +177,19 @@ export default {
 
     // 表单数据监听
     watch(
+      () => props.selectReqData,
+      (newVal) => {
+        // console.log(newVal);
+        refreshData(newVal);
+      }
+    );
+    watch(
       [() => tableDatas.item, () => tableDatas.total_data],
       ([tableItem, tableTotal]) => {
+        // console.log(tableItem);
         table_data.tableData = tableItem;
         total.value = tableTotal;
+
         // console.log(table_data.tableData);
       }
     );
@@ -185,8 +204,18 @@ export default {
           pageSize.pageSize = page_size;
         }
         //   加载数据
-        tableLoadData(table_data.tableConfig.requestData);
+        refresh();
         // console.log(reqData);
+      }
+    );
+    watch(
+      () => props.refreshFlag,
+      (newVal) => {
+        // console.log(newVal);
+        // console.log(table_data.tableConfig.requestData);
+        // 编辑刷新
+        // console.log(table_data.tableData);
+        refresh();
       }
     );
 
@@ -222,10 +251,30 @@ export default {
       emit("update:modelValue", id);
     };
 
-    // 刷新
+    // 无参数刷新
     const refresh = () => {
       //   重新加载数据
-      tableLoadData(table_data.tableConfig.requestData);
+
+      btnLoading.value = true;
+      //   console.log(btnLoading.value);
+      setTimeout(() => {
+        tableLoadData(table_data.tableConfig.requestData);
+        btnLoading.value = false;
+      }, 1000);
+    };
+
+    // 带参数刷新
+    const refreshData = (params) => {
+      let reqData = Object.assign({}, params, { pageNumber: 1, pageSize: 10 });
+      //   console.log(reqData);
+      let req = {
+        url: "getUserList", //请求接口
+        method: "post",
+        data: reqData,
+      };
+      console.log(req);
+
+      tableLoadData(req);
     };
 
     return {
@@ -240,6 +289,7 @@ export default {
       handleSizeChange,
       handleCurrentChange,
       refresh,
+      btnLoading,
     };
   },
 };

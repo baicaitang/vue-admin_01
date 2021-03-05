@@ -82,6 +82,7 @@
             style="width: 100%"
             class="add_btn"
             @click="alert_dialog"
+            :disabled="!$btnPerm('info.add')"
             >新增</el-button
           >
         </el-col>
@@ -117,6 +118,7 @@
             type="danger"
             size="mini"
             @click="deleteItem(scope.row.id)"
+            :disabled="!$btnPerm('info.delete')"
           >
             删除
           </el-button>
@@ -124,6 +126,7 @@
             type="success"
             size="mini"
             @click="editInfo_dialog(scope.row.id)"
+            :disabled="!$btnPerm('info.edit')"
           >
             编辑
           </el-button>
@@ -131,6 +134,7 @@
             type="success"
             size="mini"
             @click="toInfoDetail(scope.row)"
+            :disabled="!$btnPerm('info.detailed')"
           >
             编辑详情
           </el-button>
@@ -140,12 +144,23 @@
 
     <el-row>
       <el-col :span="12">
-        <el-button size="medium" @click="deleteAll" ref="deleteAllDom"
+        <el-button
+          size="medium"
+          @click="deleteAll"
+          ref="deleteAllDom"
+          :disabled="!$btnPerm('info.batchDel')"
           >批量删除</el-button
         >
         <el-button size="medium" type="success" @click="refresh()"
           >刷新</el-button
         >
+        <!-- <el-button
+          size="medium"
+          type="success"
+          v-btnPerm="'info.del'"
+          @click="refresh()"
+          >自定义
+        </el-button> -->
       </el-col>
       <el-col :span="12">
         <el-pagination
@@ -320,8 +335,16 @@ export default {
       GetList(data)
         .then((res) => {
           let data = res.data.data;
-
+          // console.log(data);
           tableData.item = data.data;
+          // 管理员
+          let user = store.getters["app/roles"];
+          // console.log(user[0]);
+          tableData.item.forEach((item) => {
+            item.user = user[0];
+          });
+          // console.log(tableData.item);
+
           toCategory(options.category);
           // console.log(data.total);
           total.value = data.total || 0;
@@ -517,6 +540,7 @@ export default {
 
     const refresh = () => {
       let req = {
+        user: "",
         categoryId: "",
         startTiem: "",
         endTime: "",

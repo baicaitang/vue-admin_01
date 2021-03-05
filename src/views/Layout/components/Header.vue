@@ -19,6 +19,7 @@
 import { computed, reactive, toRefs } from "vue";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
+import { ElMessage } from "element-plus";
 export default {
   name: "Header",
   setup() {
@@ -46,10 +47,17 @@ export default {
       store
         //命名空间
         .dispatch("app/logout")
-        .then(() => {
-          router.push({
-            name: "Login",
-          });
+        .then((res) => {
+          console.log(res);
+          if (res.resCode === 0) {
+            ElMessage({
+              message: "退出成功",
+              type: "success",
+            });
+            router.push({
+              name: "Login",
+            });
+          }
         });
     };
 

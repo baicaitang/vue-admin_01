@@ -1,11 +1,12 @@
 // svg-icon
 .aside-icon {
+    margin-right: 20px;
     width: 10px;
     height: 10px;
     font-size: 24px;
-    margin-right: 20px;
+    transform: scale(2);
     color: rgba(255, 255, 255, 0.4);
-    vertical-align: -.28em !important;
+    vertical-align: 0em !important;
 }
 .header-icon{
     font-size: 30px;

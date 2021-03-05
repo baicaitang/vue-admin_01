@@ -1,6 +1,9 @@
 <template>
   <div class="infoCate">
-    <el-button type="danger" @click="addFirst({ type: 'cate_first_add' })"
+    <el-button
+      type="danger"
+      @click="addFirst({ type: 'cate_first_add' })"
+      :disabled="!$btnPerm('info:firstCategoryAdd')"
       >添加一级分类</el-button
     >
     <div class="line"></div>

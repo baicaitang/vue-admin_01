@@ -48,7 +48,15 @@
   </div>
 </template>
 <script>
-import { reactive, toRefs, ref, onMounted, watch, onBeforeUnmount } from "vue";
+import {
+  reactive,
+  toRefs,
+  ref,
+  onMounted,
+  watch,
+  onBeforeUnmount,
+  onActivated,
+} from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
 import { GetList, getQiniuToken } from "@/api/news";
@@ -103,7 +111,7 @@ export default {
      * onMounted
      */
     onMounted(() => {
-      getInfo();
+      // getInfo();
       getInfoCate();
       QiniuToken();
       /**
@@ -120,6 +128,13 @@ export default {
         },
       });
       instance.create();
+    });
+
+    onActivated(() => {
+      // 更新
+      cate_data.id = route.params.id || store.getters["infoDetail/infoId"];
+      getInfo();
+      console.log("onActivated!!!");
     });
 
     onBeforeUnmount(() => {

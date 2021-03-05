@@ -1,13 +1,14 @@
 import { GetCategory } from "@/api/news";
 
 const state = {
-    QiniuUrl: "http://adminimg.baicaitang.top/"
+    QiniuUrl: "http://adminimg.baicaitang.top/",
+
 }
 
 const getters = {
-    QiniuUrl: state => state.QiniuUrl
-}
+    QiniuUrl: state => state.QiniuUrl,
 
+}
 const actions = {//异步
     //获取信息分类
     getInfoCategory(content, requestData) {

@@ -52,7 +52,7 @@ export default {
   setup() {
     // 路由实例
     let router = useRouter();
-    let route = useRoute();
+    // let route = useRoute();
     // console.log(router.options.routes);
     // vuex
     const store = useStore();

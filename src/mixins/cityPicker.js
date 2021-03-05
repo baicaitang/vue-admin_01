@@ -21,9 +21,11 @@ export function cityPicker() {
         areaVal: "",
         streetVal: "",
     })
+    const picker_datas = toRefs(picker_data)
 
 
     const getData = (params) => {
+        // console.log(params);
         getCityPicker(params)
             .then((res) => {
                 //   console.log(res);
@@ -36,13 +38,22 @@ export function cityPicker() {
 
     // 获取省份
     const getProvance = () => {
-        getData({ type: "province", })
+
+        getData({ type: "province" })
 
     };
 
     // 选择省份，获取城市
     const handleProvince = (val) => {
-        //   console.log(val);
+        // console.log(val);
+        if (val) {
+            picker_data.provinceVal = val
+        } else {
+            picker_data.provinceVal = ""
+            // picker_data.cityVal = val
+            resetValue({ type: "city" })
+            return false
+        }
         // 选择另一个省份重置选项
         resetValue({ type: "city" })
         getData({
@@ -52,8 +63,10 @@ export function cityPicker() {
     };
 
     //选择城市， 获取区县
-
     const handleCity = (val) => {
+        if (val) {
+            picker_data.cityVal = val
+        }
         resetValue({ type: "area" })
         getData({
             type: "area", city_code: val,
@@ -63,6 +76,9 @@ export function cityPicker() {
 
     //选择区县， 获取街道
     const handleArea = (val) => {
+        if (val) {
+            picker_data.areaVal = val
+        }
         resetValue({ type: "street" })
         getData({
             type: "street", area_code: val,
@@ -70,8 +86,10 @@ export function cityPicker() {
 
     };
 
-    const handleStreet = () => {
-
+    const handleStreet = (val) => {
+        if (val) {
+            picker_data.streetVal = val
+        }
         resetValue({ type: "" })
     }
 
@@ -93,16 +111,19 @@ export function cityPicker() {
         const valJson = {
             city: ["cityVal", "areaVal", "streetVal"],
             area: ["areaVal", "streetVal"],
-            street: ["streetVal"]
+            street: ["streetVal"],
         }
 
-        const arr = valJson[params.type] //["cityVal", "areaVal", "streetVal"]
+        const arr = valJson[params.type] //["cityVal", "areaVal", "streetVal",undefined]
+        // console.log(arr);
 
         if (arr) {
             arr.forEach(item => {
                 // item-- > "cityVal"
                 picker_data[item] = ""
             })
+        } else {
+
         }
 
         result()
@@ -119,7 +140,9 @@ export function cityPicker() {
 
 
     return {
-        picker_data,
+        // picker_data,
+        picker_datas,
+        // ...picker_data,
         resultData,
         getProvance,
         handleProvince,

@@ -81,6 +81,10 @@ export default {
       type: Array,
       default: () => {},
     },
+    type: {
+      type: String,
+      default: "",
+    },
   },
   setup(props, { emit }) {
     const {
@@ -90,8 +94,16 @@ export default {
       handleCity,
       handleArea,
       handleStreet,
-      picker_data,
+      picker_datas,
       resultData,
+      // provinceVal,
+      // cityVal,
+      // areaVal,
+      // streetVal,
+      // provinceData,
+      // cityData,
+      // areaData,
+      // streetData,
     } = cityPicker();
 
     const init = reactive({
@@ -101,7 +113,12 @@ export default {
       street: false,
     });
 
-    const picker_datas = toRefs(picker_data);
+    // const provinceVal = ref("");
+    // const cityVal = ref("");
+    // const areaVal = ref("");
+    // const streetVal = ref("");
+
+    // const picker_datas = toRefs(picker_data);
 
     onMounted(() => {
       // sessionStorage.setItem("city_data", "");
@@ -124,6 +141,31 @@ export default {
         // emit("update:cityPickerData", resultData);
         // sessionStorage.setItem("city_data", JSON.stringify(resultData));
         // console.log(sessionStorage.getItem("city_data"));
+      }
+    );
+    watch(
+      () => props.cityPickerData,
+      (newVal) => {
+        // 监听编辑弹框数据
+        // console.log(newVal);
+        // console.log(picker_datas);
+        if (newVal) {
+          // 获取城市数据
+          if (newVal.provinceVal) handleProvince(newVal.provinceVal);
+          if (newVal.cityVal) handleCity(newVal.cityVal);
+          if (newVal.areaVal) handleArea(newVal.areaVal);
+          if (newVal.streetVal) handleStreet(newVal.streetVal);
+        }
+      }
+    );
+    watch(
+      () => props.type,
+      () => {
+        // console.log(props.type);
+        // 关闭弹框后重置
+        if (props.type === "add") {
+          handleProvince("");
+        }
       }
     );
 
@@ -153,6 +195,10 @@ export default {
     return {
       init,
       ...picker_datas,
+      // provinceVal,
+      // cityVal,
+      // areaVal,
+      // streetVal,
       handleProvince,
       handleCity,
       handleArea,
