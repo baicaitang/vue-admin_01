@@ -26,3 +26,16 @@ $header:75px;
     -ms-#{$type}:$value;
     #{$type}:$value;
 }
+
+@mixin selDom($align,$width,$line-height:"normal"){
+    label {
+        float:left;
+        text-align: $align;
+        line-height: $line-height+px;
+        width: $width+px;
+    }
+
+    .wrap-content {
+        margin-left: $width + px;
+    }
+}

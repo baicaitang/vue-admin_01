@@ -27,13 +27,15 @@
             </template>
             <!-- 二级菜单 -->
             <el-menu-item-group>
-              <el-menu-item
-                v-for="subItem in item.children"
-                :key="subItem.id"
-                :index="subItem.path"
-              >
-                {{ subItem.meta.name }}
-              </el-menu-item>
+              <template v-for="subItem in item.children">
+                <el-menu-item
+                  v-if="!subItem.hidden"
+                  :key="subItem.id"
+                  :index="subItem.path"
+                >
+                  {{ subItem.meta.name }}
+                </el-menu-item>
+              </template>
             </el-menu-item-group>
           </el-submenu>
         </template>
@@ -50,8 +52,8 @@ export default {
   setup() {
     // 路由实例
     let router = useRouter();
-    let route = useRoute();
-    console.log(router.options.routes);
+    // let route = useRoute();
+    // console.log(router.options.routes);
     // vuex
     const store = useStore();
     // console.log(store);

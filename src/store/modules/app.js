@@ -1,31 +1,42 @@
 // import cookie from 'js-cookie';
-import { Login } from "@/api/login";
-import { setToken, setUsername, getUsername, removeToken, removeUsername } from "@/utils/app.js";
+import { getUsername, removeToken, removeUsername } from "@/utils/app.js";
+import { Logout } from "@/api/login";
 
 const state = {
     // isCollapse: JSON.parse(cookie.get('isCollapse')) || false,
     isCollapse: JSON.parse(sessionStorage.getItem('isCollapse')) || false,
     to_token: "",
     username: getUsername() || "",
+    roles: [],
+    buttonPermission: []
 }
 const getters = {
     isCollapse: state => state.isCollapse,
-
+    roles: state => state.roles,
+    buttonPermission: state => state.buttonPermission
 }
 const mutations = {//同步
     SET_COLLAPSE(state) {
-        console.log('app??????');
+        // console.log('app??????');
         state.isCollapse = !state.isCollapse
         // 本地存储 
         sessionStorage.setItem('isCollapse', JSON.stringify(state.isCollapse))
         // cookie.set('isCollapse', JSON.stringify(state.isCollapse))
     },
-    SET_TOKEN(state, value) {
-        state.to_token = value
+    SET_ROLES(state, value) {
+        state.roles = value
     },
-    SET_USERNAME(state, value) {
-        state.username = value
+    SET_BUTTON(state, value) {
+        state.buttonPermission = value
+        // console.log(state.buttonPermission);
     },
+    SET_ROUTER(state, value) {
+        state.addRouter = value
+        state.allRouter = defaultRouterMap.concat(value)
+        // console.log(state.allRouter);
+        // console.log(state.addRouter);
+    },
+
 
 }
 
@@ -35,38 +46,25 @@ const actions = {//异步
     //     commit('SET_COLLAPSE')
     //     // console.log(data);
     // }
-    // 登录 
-    login(content, requestData) {
-        return new Promise((resolve, reject) => {
-            Login(requestData).then(res => {
-                // console.log(content);
-                console.log(res);
 
-                let data = res.data.data
-
-                content.commit("SET_TOKEN", data.token)
-                content.commit("SET_USERNAME", data.username)
-                // 存储token
-                setToken(data.token)
-                setUsername(data.username)
-
-                resolve(res)
-            }).catch(err => {
-                reject(err)
-            })
-        })
-    },
     // 退出 
     logout({ commit }) {
 
         return new Promise((resolve, reject) => {
-            removeToken()
-            removeUsername()
+            Logout().then(res => {
 
-            commit("SET_TOKEN", "")
-            commit("SET_USERNAME", "")
+                let data = res.data
 
-            resolve()
+                removeToken()
+                removeUsername()
+
+                commit("SET_TOKEN", "")
+                commit("SET_USERNAME", "")
+
+                resolve(data)
+
+            }).catch(err => { })
+
         })
 
     }

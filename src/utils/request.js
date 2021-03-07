@@ -1,5 +1,6 @@
 import axios from "axios";
 import { ElMessage } from "element-plus";
+import { getToken, getUsername } from "@/utils/app.js";
 
 let baseUrl = process.env.VUE_APP_FLAG;
 
@@ -16,9 +17,9 @@ service.interceptors.request.use(
     // console.log(config);
     // 给后端发送相关参数
     // 根据业务需求添加 
-    config.headers['tokey'] = "";
-    config.headers['userId'] = "";
-    config.headers['sui'] = ""
+    config.headers['tokey'] = getToken();
+    config.headers['UserName'] = getUsername();
+
 
 
     return config;
