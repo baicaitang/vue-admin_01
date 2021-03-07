@@ -1,6 +1,8 @@
 <template>
   <div class="tableIndex">
+    <el-skeleton :rows="6" animated v-if="skeletonAnimated"> </el-skeleton>
     <el-table
+      v-if="!skeletonAnimated"
       :data="tableData"
       ref="tableRoot"
       border
@@ -161,6 +163,7 @@ export default {
     const pageSize = ref(10);
     const pageSizes = ref([10, 20, 30, 40]);
     const btnLoading = ref(false);
+    const skeletonAnimated = ref(true);
 
     const table_datas = toRefs(table_data);
 
@@ -173,6 +176,7 @@ export default {
     onMounted(() => {
       //   console.log(table_data.tableData);
       handleTotal();
+      skeletonAnimated.value = true;
     });
 
     // 表单数据监听
@@ -189,7 +193,7 @@ export default {
         // console.log(tableItem);
         table_data.tableData = tableItem;
         total.value = tableTotal;
-
+        skeletonAnimated.value = false;
         // console.log(table_data.tableData);
       }
     );
@@ -290,6 +294,7 @@ export default {
       handleCurrentChange,
       refresh,
       btnLoading,
+      skeletonAnimated,
     };
   },
 };

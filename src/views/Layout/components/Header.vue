@@ -48,7 +48,7 @@ export default {
         //命名空间
         .dispatch("app/logout")
         .then((res) => {
-          console.log(res);
+          // console.log(res);
           if (res.resCode === 0) {
             ElMessage({
               message: "退出成功",

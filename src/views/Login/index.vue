@@ -78,6 +78,9 @@
             >{{ model === "login" ? "登录" : "注册" }}</el-button
           >
         </el-form-item>
+        <el-button plain @click="open1" ref="tipsDom" class="openTips">
+          tips
+        </el-button>
       </el-form>
     </div>
   </div>
@@ -91,6 +94,7 @@ import {
   reactive,
   ref,
   onUnmounted,
+  onMounted,
   // getCurrentInstance,
 } from "vue";
 import { useRouter } from "vue-router";
@@ -219,6 +223,12 @@ export default defineComponent({
      *表单dom
      */
     let refruleForms = ref(null);
+    const tipsDom = ref(null);
+
+    onMounted(() => {
+      // 提示显示
+      open1();
+    });
 
     // 销毁页面清除定时器
     onUnmounted(() => {
@@ -418,6 +428,18 @@ export default defineComponent({
       }, 1000);
     };
 
+    // 弹出提示
+    const open1 = () => {
+      console.log(tipsDom);
+      tipsDom.value.$notify({
+        title: "tips",
+        dangerouslyUseHTMLString: true,
+        message:
+          "<h3>可以使用示例账号：</h3><h4>azxc@qq.com</h4><h4>z12345</h4>",
+        position: "top-right",
+      });
+    };
+
     return {
       ...data,
       ...form,
@@ -425,6 +447,8 @@ export default defineComponent({
       submitForm,
       refruleForms,
       getCode,
+      open1,
+      tipsDom,
     };
   },
 });
@@ -432,7 +456,7 @@ export default defineComponent({
 <style lang="scss" scoped>
 .login {
   height: 100vh;
-  background-color: #344a5f;
+  background-color: #1e4162;
 }
 .login-wrap {
   width: 330px;

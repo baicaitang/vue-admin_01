@@ -88,15 +88,16 @@
         </el-col>
       </el-row>
     </el-form>
-
+    <el-skeleton :rows="6" animated v-if="skeletonAnimated"> </el-skeleton>
+    <!-- v-loading="loadingData" -->
     <el-table
+      v-if="!skeletonAnimated"
       :data="tableData.item"
       border
       fit
       style="width: 100%"
       class="space-bottom infoIndex-table-th"
       ref="deleteDom"
-      v-loading="loadingData"
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="50"> </el-table-column>
@@ -275,6 +276,7 @@ export default {
     const loadingData = ref(false);
     const delId = ref("");
     const editId = ref("");
+    const skeletonAnimated = ref(true); //骨架屏
 
     // Dom
     let deleteDom = ref("");
@@ -287,6 +289,7 @@ export default {
        * 页面dom元素实例完成
        */
       onMounted(() => {
+        // 数据渲染
         if (tableData.item.length) {
           total.value = tableData.item.length;
         }
@@ -331,7 +334,8 @@ export default {
       }
 
       // console.log(data);
-      loadingData.value = true;
+      // loadingData.value = true;//loading
+      skeletonAnimated.value = true; //骨架屏
       GetList(data)
         .then((res) => {
           let data = res.data.data;
@@ -348,10 +352,12 @@ export default {
           toCategory(options.category);
           // console.log(data.total);
           total.value = data.total || 0;
-          loadingData.value = false;
+          // loadingData.value = false;
+          skeletonAnimated.value = false;
         })
         .catch((err) => {
-          loadingData.value = false;
+          // loadingData.value = false;
+          skeletonAnimated.value = false;
         });
     };
 
@@ -566,8 +572,9 @@ export default {
       dialog_info,
       dialog_info_edit,
       total,
-      loadingData,
+      // loadingData,
       editId,
+      skeletonAnimated,
       //dom
       deleteDom,
       deleteAllDom,

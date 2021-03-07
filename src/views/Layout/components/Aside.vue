@@ -83,7 +83,7 @@ export default {
   top: 0;
   left: 0;
   height: 100vh;
-  background-color: #344a5f;
+  background-color: #1e4162;
   // transition: all 0.3s ease 0;
   @include webkit(transition, all 0.3s ease 0);
 }

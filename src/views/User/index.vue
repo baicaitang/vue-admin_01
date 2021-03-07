@@ -38,6 +38,7 @@
         >
       </el-col>
     </el-row>
+
     <!-- 表单组件 -->
     <Table
       :config="ConfigTable"
