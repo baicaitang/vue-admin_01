@@ -92,7 +92,7 @@ export const asnycRouterMap = [
         name: "InfoIndex",
         component: () => import("@/views/Info/index.vue"),
         meta: {
-          // keepAlive: true,
+          keepAlive: true,
           role: ["sale", "manager"],
           name: "信息列表"
         },
@@ -114,7 +114,7 @@ export const asnycRouterMap = [
         hidden: true,
         component: () => import("@/views/Info/detail.vue"),
         meta: {
-          keepAlive: true,
+          // keepAlive: true,
           role: ["sale", "manager"],
           name: "信息详情"
         },

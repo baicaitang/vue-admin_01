@@ -153,7 +153,7 @@ export default {
           submit_loading.value = false;
           // dialog_form.value.resetFields();
 
-          // dialog_info_flag.value = false;
+          dialog_info_flag.value = false;
           // 刷新列表
           emit("refreshList");
         })

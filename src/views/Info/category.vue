@@ -272,6 +272,7 @@ export default {
     };
 
     const deleteCategory = () => {
+      // DeleteCategory({ categoryId: 9998 })
       DeleteCategory({ categoryId: deleteId.value })
         .then((res) => {
           // console.log(res);

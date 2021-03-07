@@ -19,8 +19,9 @@ import { buttonPermission } from "@/utils/buttonPermission";
 import svg_icon from "./component/svg_icon/index.vue";
 import "./utils/svg";
 
-
 const app = createApp(App)
+
+
 
 // 1、全局按钮权限方法
 app.config.globalProperties.$btnPerm = buttonPermission
@@ -36,4 +37,3 @@ app
   .use(router)
   .use(VueAxios, axios)
   .mount("#app");
-

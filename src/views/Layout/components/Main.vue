@@ -1,13 +1,13 @@
 <template>
   <div class="main">
-    <router-view v-slot="{ Component, route }">
-      <!-- 需要缓存 -->
-      <keep-alive include="ConsoleIndex,InfoDetail">
+    <!-- <router-view v-slot="{ Component, route }">
+   
+      <keep-alive include="">
         <component :is="Component" v-if="route.meta.keepAlive" />
       </keep-alive>
-      <!-- 不需要缓存 -->
+
       <component :is="Component" v-if="!route.meta.keepAlive" />
-    </router-view>
+    </router-view> -->
 
     <!-- <keep-alive>
       <router-view v-if="!$route.meta.keepAlive"></router-view>
@@ -15,6 +15,7 @@
 
     <!-- 不需要缓存 -->
     <!-- <router-view v-if="!$route.meta.keepAlive"></router-view> -->
+    <router-view></router-view>
   </div>
 </template>
 <script>

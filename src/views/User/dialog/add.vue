@@ -116,7 +116,7 @@
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="close">取 消</el-button>
-          <el-tooltip content="确认后真实姓名不可修改" placement="top">
+          <el-tooltip :content="cont" placement="top">
             <el-button type="danger" :loading="submit_loading" @click="submit">
               确 定
             </el-button>
@@ -243,7 +243,7 @@ export default {
     const city_picker_data = ref({}); //城市联动数据
     const cityPickerData = ref({});
     const roleStatus = ref(""); //禁用启用
-    const roleCheckList = ref([]); //当前选中的角色
+    const roleCheckList = ref(["sale"]); //当前选中的角色
     const roleItem = ref([]); //用户可选角色
     const dialog_info_flag = ref(false); //弹框出现关闭状态,false关闭
     const submit_loading = ref(false); //确认按钮加载状态
@@ -251,7 +251,8 @@ export default {
     const editPass = ref(true); //编辑弹框显示可修改密码按钮
     const isPass = ref(false); //默认禁止修改密码
     const truenameDisabled = ref(false);
-    const permCheckList = ref([]);
+    const permCheckList = ref(["info.edit"]);
+    const cont = ref("确认后真实姓名不可修改");
 
     const form_datas = toRefs(form_data);
 
@@ -294,6 +295,17 @@ export default {
     //     // emit("update:switchStatus", roleStatus.value);
     //   }
     // );
+    watch(
+      () => permCheckList.value,
+      (newVal) => {
+        // console.log(newVal);
+        // console.log(roleCheckList.value);
+        if (roleCheckList.value.length === "" || permCheckList.value === "") {
+          roleCheckList.value = ["sale"];
+          permCheckList.value = ["info.edit"];
+        }
+      }
+    );
 
     /**
      * 点击关闭弹框:重置数据
@@ -302,8 +314,8 @@ export default {
      */
     const close = () => {
       dialog_info_flag.value = false;
-      roleCheckList.value = [];
-      permCheckList.value = [];
+      roleCheckList.value = ["sale"];
+      permCheckList.value = ["info.edit"];
       // 向父级传递数据
       emit("update:type", "");
       emit("update:flag", false);
@@ -336,6 +348,7 @@ export default {
         isPass.value = false; //修改密码按钮启用
         roleStatus.value = editData.status;
         truenameDisabled.value = true;
+        // cont.value = "";
         passText.value = "请输入修改密码";
         //将角色数据进行转换：字符串转为数组
         let role = editData.role.split(",");
@@ -361,7 +374,8 @@ export default {
         isPass.value = true; //修改密码按钮禁用
         passText.value = "请输入密码";
         truenameDisabled.value = false;
-        permCheckList.value = [];
+        // console.log(permCheckList.value);
+        permCheckList.value = ["info:edit"];
         roleCheckList.value = ["sale"];
         roleStatus.value = "2"; //默认启用
         // 遍历响应数据为空
@@ -435,6 +449,7 @@ export default {
         // console.log(vaild);
         if (vaild) {
           // console.log("验证通过");
+
           /**
            * 深拷贝： JSON.parse(JSON.stringify(form_data.form))) --> 先转字符串，再转json
            *          如果obj里有函数，undefined，则序列化的结果会把函数或 undefined丢失,
@@ -444,7 +459,7 @@ export default {
 
           // 数据处理
           let reqData = Object.assign({}, form_data.form);
-          console.log(reqData);
+          // console.log(reqData);
           // console.log(reqData.role);
           // reqData.role = reqData.role.trim();
           reqData.role = reqData.role.join(",");
@@ -508,6 +523,7 @@ export default {
           submit_loading.value = false; //按钮加载关闭
           // resetField(); //重置表单
           close(); //关闭弹框
+
           // 刷新用户列表
           emit("update:refreshList", true);
         })
@@ -530,7 +546,8 @@ export default {
           emit("update:editId", form_data.form.id);
           emit("update:switchStatus", roleStatus.value);
           // resetField();
-          roleCheckList.value = [];
+          // roleCheckList.value = ["sale"];
+          // permCheckList.value = ["info.edit"];
           close();
           // 刷新用户列表
           emit("update:refreshList", true);
@@ -559,6 +576,8 @@ export default {
       form_data.form.role = [];
       form_data.form.btnPerm = [];
       city_picker_data.value = {};
+      // roleCheckList.value = ["sale"];
+      // permCheckList.value = ["info.edit"];
     };
 
     return {
@@ -577,6 +596,7 @@ export default {
       cityPickerData,
       truenameDisabled,
       permCheckList,
+      cont,
       // reactive
       ...form_datas,
       rules_datas,

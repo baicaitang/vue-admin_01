@@ -317,7 +317,7 @@ export default {
 
       // 点击禁用启用按钮
       if (val && val.status) {
-        console.log(val);
+        // console.log(val);
         req = {
           id: val.id,
           status: val.status,

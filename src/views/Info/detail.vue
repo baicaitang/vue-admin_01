@@ -111,7 +111,7 @@ export default {
      * onMounted
      */
     onMounted(() => {
-      // getInfo();
+      getInfo();
       getInfoCate();
       QiniuToken();
       /**
@@ -132,8 +132,8 @@ export default {
 
     onActivated(() => {
       // 更新
-      cate_data.id = route.params.id || store.getters["infoDetail/infoId"];
-      getInfo();
+      // cate_data.id = route.params.id || store.getters["infoDetail/infoId"];
+      // getInfo();
       console.log("onActivated!!!");
     });
 
@@ -190,7 +190,7 @@ export default {
 
       EditInfo(requestData)
         .then((res) => {
-          console.log(res);
+          // console.log(res);
           ElMessage({
             message: res.data.message,
             type: "success",
@@ -203,7 +203,7 @@ export default {
     };
 
     const toInfoIndex = () => {
-      console.log("back");
+      // console.log("back");
       router.push({
         path: "/infoIndex",
       });

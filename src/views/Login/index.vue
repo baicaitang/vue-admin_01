@@ -90,6 +90,7 @@ import {
   toRefs,
   reactive,
   ref,
+  onUnmounted,
   // getCurrentInstance,
 } from "vue";
 import { useRouter } from "vue-router";
@@ -218,6 +219,11 @@ export default defineComponent({
      *表单dom
      */
     let refruleForms = ref(null);
+
+    // 销毁页面清除定时器
+    onUnmounted(() => {
+      clearInterval(datas.timer);
+    });
 
     /**
      * 表单提交
