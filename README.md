@@ -1,6 +1,6 @@
 使用vue3.0 + element-plus做的后台系统
 
-项目线上地址：http://wyz.baicaitang.top/#/login
+项目地址：http://wyz.baicaitang.top/#/login
 
 =======
 
